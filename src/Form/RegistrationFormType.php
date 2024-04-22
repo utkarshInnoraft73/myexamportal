@@ -11,11 +11,19 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 
 class RegistrationFormType extends AbstractType
 {
+    /**
+     * Public function buildForm()
+     *  To build the exam form.
+     *
+     * @param FormBuilderInterface $builder.
+     *  To build the form.
+     *
+     * @param array $options.
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -29,8 +37,7 @@ class RegistrationFormType extends AbstractType
                 ],
             ])
             ->add('plainPassword', PasswordType::class, [
-                // instead of being set onto the object directly,
-                // this is read and encoded in the controller
+
                 'mapped' => false,
                 'attr' => ['autocomplete' => 'new-password'],
                 'constraints' => [
@@ -45,16 +52,6 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ]);
-            // ->add('roles', ChoiceType::class, [
-            // 'label' => 'Role',
-            // 'choices' => [
-            //     'User' => 'ROLE_USER',
-            //     'Admin' => 'ROLE_ADMIN',
-            //     // Add more roles as needed
-            // ],
-            // 'multiple' => true,
-            // 'expanded' => true,
-            // ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

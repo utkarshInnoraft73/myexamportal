@@ -89,22 +89,21 @@ class AdminController extends AbstractController
     }
 
     /**
-     * Route for create exam.
-     * Routh path (admin/create-exam).
-     * Routh name (create_exam).
+     * Route for questions
+     * Routh path (admin/questions).
+     * Routh name (app_adminQuestion).
      *
      */
     #[Route('/admin/questions', 'app_adminQuestion')]
 
     /**
-     * Public funtion createExam();
-     *  To create the exams.
+     * Public funtion allQuestions();
+     *  To Show all predefined questons.
      *
-     * @param Request $request.
+     * @param SerializerInterface $serializer.
      *  Manage the reques.
      *
-     * @return Response (create-exam/create-exam.html.twig).
-     *  Return response the to the page create-exam.html.twig.
+     * @return Response
      */
     public function allQuestions(SerializerInterface $serializer): Response
     {
@@ -130,7 +129,6 @@ class AdminController extends AbstractController
         }
 
         $data = [
-            // 'id' => $Id,
             'title' => $quesTitle,
             'A' => $A,
             'B' => $B,
@@ -147,8 +145,8 @@ class AdminController extends AbstractController
     }
 
     /**
-     * Route for my created exams.
-     * Routh path (admin/your-exams).
+     * Route for exams list created by admin.
+     * Routh path (admin/your-exams/{id}).
      * Routh name (your_exams).
      *
      */
@@ -158,18 +156,20 @@ class AdminController extends AbstractController
      * Public funtion yourExams();
      *  To create the exams.
      *
-     * @param Request $request.
-     *  Manage the request.
+     * @param int id.
+     *  User id.
      *
-     * @return Response (create-exam/your-exam.html.twig).
-     *  Return response the to the page your-exam.html.twig.
+     * @param SerializerInterface $serializer.
+     *  To serialize the data array to the jsonData.
+     *
+     * @param ExamRepository $er.
+     *  To exam repository exam entity.
+     *
+     * @return Response
      */
-    public function yourExams($id,SerializerInterface $serializer, ExamRepository $er): Response
+    public function yourExams(int $id,SerializerInterface $serializer, ExamRepository $er): Response
     {
-        // dd($id);
         $exam = $er->findAll();
-        // dd($exam);
-        // $owner = []$exam[0]->getCreatedBy();
         $user = $this->em->getRepository(User::class)->find($id);
         $userName = $user->getProfile()->getName();
         $examArr = [];
@@ -206,9 +206,9 @@ class AdminController extends AbstractController
     }
 
     /**
-     * Route for my created exams.
-     * Routh path (admin/your-exams).
-     * Routh name (your_exams).
+     * Route for my delete exams.
+     * Routh path (admin/delete-exams/{examId}).
+     * Routh name (delete_exams).
      *
      */
     #[Route('/admin/delete-exams/{examId}', 'delete_exams')]
@@ -217,7 +217,7 @@ class AdminController extends AbstractController
      * Public funtion deleteExams();
      *  To delete the exams.
      *
-     * @param int $id.
+     * @param int $examId.
      *  Exam Id for that admin is requesting for delete.
      *
      * @return Response (route name your_exams).
@@ -256,7 +256,6 @@ class AdminController extends AbstractController
     public function yourExamDetail(SerializerInterface $serializer, $examId): Response
     {
         $exam = $this->em->getRepository(Exam::class)->find($examId);
-        // $ProfileExam = $this->em->getRepository(ProfileExamRelated::class)->findAll();
         $examName = $exam->getExamName();
         $duration = $exam->getDuration();
         $totalQues = $exam->getNoOfQuestios();

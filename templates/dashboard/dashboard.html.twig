@@ -2,7 +2,6 @@
 
 {% block title %}Hello DashboardController!
 {% endblock %}
-
 {% block body %}
 	{% if app.user %}
 		<div class="d-flex flex-column flex-shrink-0 p-3 bg-light bg-yellow" style="width: 280px;">
@@ -10,20 +9,16 @@
 				<span style="font-size: 15px; font-weight:200;">{{ app.user.userIdentifier }}</span>
 			</h3>
 			<a href="{{ path('app_logout') }}">Logout</a>
-
 			<hr>
 			<ul class="nav nav-pills flex-column mb-auto">
-
 				<li>
 					<a href="{{path('app_dashboard')}}" class="nav-link active link-dark">
 						Dashboard
 					</a>
 				</li>
 				<li>
-<a href="{{path('app_appliedExams', {'id': app.user.id})}}" class="nav-link link-dark">
-
+					<a href="{{path('app_appliedExams', {'id': app.user.id})}}" class="nav-link link-dark">
 						Applied Exams
-
 					</a>
 				</li>
 				<li>
@@ -38,6 +33,7 @@
 				</li>
 			</ul>
 		</div>
+
 		{# Dashboard body starts here. #}
 		<div class="dashboard-body">
 			<div class="container">
@@ -48,8 +44,7 @@
 								<h5 class="card-title">Applied exams</h5>
 								<h6 class="card-subtitle mb-2 text-muted">See your exams.</h6>
 								<p class="card-text">Look at your exams and start preparing for it.</p>
-<a href="{{path('app_appliedExams', {'id': app.user.id})}}" class="card-link">Show more</a>
-
+								<a href="{{path('app_appliedExams', {'id': app.user.id})}}" class="card-link">Show more</a>
 							</div>
 						</div>
 					</div>
@@ -88,6 +83,4 @@
 		</div>
 	{% endif %}
 	{# Dashboard body ends here. #}
-
-
 {% endblock %}

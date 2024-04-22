@@ -96,7 +96,7 @@ class GeneralController extends AbstractController
      * @return response.
      *  return respose of the request on the page /profile/profile.html.twig.
      */
-    public function profile($id): Response
+    public function profile(int $id): Response
     {
         // Fetch the user from the User Entity.
         $user = $this->em->getRepository(User::class)->find($id);
@@ -147,7 +147,7 @@ class GeneralController extends AbstractController
      * @return response.
      *  return respose of the request on the page /create-profile/create-profile.html.twig.
      */
-    public function createProfile(Request $request, $id): response
+    public function createProfile(Request $request, int $id): response
     {
         // Fetching the user.
         $user = $this->em->getRepository(User::class)->find($id);
@@ -186,7 +186,7 @@ class GeneralController extends AbstractController
      * @return response.
      *  return respose of the request on the page /profile/create-profile.html.twig.
      */
-    public function editprofile(Request $request, $id): response
+    public function editprofile(Request $request, int $id): response
     {
         $profile = $this->em->getRepository(Profile::class)->find($id);
         $form = $this->createForm(ProfileType::class, $profile);
@@ -250,15 +250,27 @@ class GeneralController extends AbstractController
 
     /**
      * Routing for apply exam.
-     * Route path (domain/apply-exam/{profileId}/exam{examId}).
+     * Route path (domain/apply-exam/{profileId}/{examId}).
      * Route name(apply_exam).
      */
     #[Route('/apply-exam/{profileId}/{examId}', name: 'apply_exam')]
 
     /**
      * Public funtion applyExam.
+     *  To show all the exam for that user is appling.
+     *
+     * @param Request $request.
+     *  To manage the requests.
+     *
+     * @param int @examId.
+     *  Exam Id.
+     *
+     * @param int profileId.
+     *  Profile Id of the user.
+     *
+     * @return Response
      */
-    public function applyExam(Request $request, $examId, $profileId): response
+    public function applyExam(Request $request, int $examId, int $profileId): Response
     {
 
         $user = $this->em->getRepository(Profile::class)->find($profileId);
@@ -289,7 +301,7 @@ class GeneralController extends AbstractController
     }
 
     /**
-     * Route for the applied exams list for user.
+     * Route for the user-exams exams list for user.
      * Path (domain/user-exams).
      * Route name (app_appliedExams).
      *
@@ -342,7 +354,7 @@ class GeneralController extends AbstractController
     }
 
     /**
-     * Route for the applied exams list for user.
+     * Route for the start exams.
      * Path (domain/start-exam/{examId}/{profileID}).
      * Route name (app_startExam).
      *
@@ -351,15 +363,12 @@ class GeneralController extends AbstractController
 
     /**
      * Public function startExam().
-     *  To show user has applied for which exams.
+     *  To start exam.
      *
      * @param int $id.
      *  User id give in url.
      *
-     * @return response app_appiedExams.
-     *  After Checking and fetching the data return the response on the
-     *
-     * page (exams/appliedExam.html.twig).
+     * @return response
      *
      */
     public function startExam($examId, $profileId): response
@@ -373,7 +382,6 @@ class GeneralController extends AbstractController
         $owner = $exam->getCreatedBy();
         $passingMarks = $exam->getPassingMarks();
         $totalMarks = $exam->getTotalMarks();
-        // $negativeMarks = $exam->getNegativeMarking();
         $numOfQues = $exam->getNoOfQuestios();
         $duration = $exam->getDuration();
 
@@ -385,37 +393,33 @@ class GeneralController extends AbstractController
             'owner' => $owner,
             'totalMarks' => $totalMarks,
             'duration' => $duration,
-            // 'negative' => $negativeMarks,
             'numOfQues' => $numOfQues
         ];
         return $this->render('exams/start-exam.html.twig', $data);
     }
 
     /**
-     * Route for the applied exams list for user.
-     * Path (domain/start-exam/{examId}).
-     * Route name (app_startExam).
+     * Route for questions.
+     * Path (domain/questions/{userId}/{examId}).
+     * Route name (app_questionList).
      *
      */
     #[Route('questions/{userId}/{examId}', name: 'app_questionList')]
 
     /**
      * Public function questions().
-     *  To show user has applied for which exams.
+     *  To show all the questions of the exam.
      *
      * @param int $id.
      *  User id give in url.
      *
-     * @return response app_appiedExams.
-     *  After Checking and fetching the data return the response on the
+     * @return response exam_result.
+     *  After submission page will redirect to the exam_result.
      *
-     * page (exams/appliedExam.html.twig).
      *
      */
     public function questions(int $userId, int $examId): response
     {
-        $profile = $this->em->getRepository(Profile::class)->find($userId);
-        $profileId = $profile->getId();
         $question = $this->em->getRepository(Questions::class)->findAll();
 
         return $this->render('Question/questions.html.twig', [
@@ -425,34 +429,25 @@ class GeneralController extends AbstractController
     }
 
     /**
-     * Route for the applied exams list for user.
-     * Path (domain/open-exam/{userId}/{examId}/{quesId}).
-     * Route name (app_startExam).
+     * Route for result.
+     * Path (domain/exam-submit).
+     * Route name (exam_submit).
      *
      */
     #[Route('/exam-submit', name: 'exam_submit')]
 
     /**
-     * Public function questions().
-     *  To show user has applied for which exams.
+     * Public function examSubmit().
+     *  To appear for the exam
      *
-     * @param int $id.
-     *  User id give in url.
+     * @param Request $request.
+     *  To manage the requests.
      *
-     * @return response app_appiedExams.
-     *  After Checking and fetching the data return the response on the
-     *
-     * page (exams/appliedExam.html.twig).
-     *
+     * @return response
      */
     public function examSubmit(Request $request): response
     {
         $ans = $request->get('answers');
-
-        // $exam = $this->em->getRepository(Exam::class)->find($examId);
-        // $user = $this->em->getRepository(User::class)->find($userId);
-        $user = $this->getUser()->getId();
-        // $profileId = $user->getProfile()->getId();
         $correctAns = 0;
         $incorrectAns = 0;
         $gotenMarks = 0;
@@ -461,11 +456,10 @@ class GeneralController extends AbstractController
         $correct = [];
         $userAns = [];
         $pointedMarks = [];
-        for ($i = 1; $i <= count($ans); $i++) {
 
+        for ($i = 1; $i <= count($ans); $i++) {
             array_push($userAns, $ans[$i]);
         }
-        // dd($userAns);
         for ($i = 0; $i < count($question); $i++) {
             array_push($correct, $question[$i]->getCorrectOpt());
             array_push($pointedMarks, $question[$i]->getMarksForQuestion());
@@ -476,10 +470,6 @@ class GeneralController extends AbstractController
                 $incorrectAns++;
             }
         }
-
-
-
-        // dd($data);
 
         return $this->redirectToRoute('exam_result', ['gotenmarks' => $gotenMarks, 'incorrectans' => $incorrectAns, 'correctans' => $correctAns,]);
     }
@@ -493,19 +483,24 @@ class GeneralController extends AbstractController
     #[Route('/result/{gotenmarks}/{incorrectans}/{correctans}', name: 'exam_result')]
 
     /**
-     * Public function questions().
-     *  To show user has applied for which exams.
+     * Public function result().
+     *  To show user result for the exam.
      *
-     * @param int $id.
-     *  User id give in url.
+     * @param SerializerInterface $serializer.
+     *  To manage the requests.
      *
-     * @return response app_appiedExams.
-     *  After Checking and fetching the data return the response on the
+     * @param string $gottenmarks.
+     *  User Marks gotten.
      *
-     * page (exams/appliedExam.html.twig).
+     * @param string inccorectans.
+     *  Numbers of question that are answered wrong.
      *
+     * @param string correctans.
+     *  number questions that are answered correct.
+     *
+     * @return response
      */
-    public function result(SerializerInterface $serializer,  $gotenmarks, $incorrectans, $correctans): response
+    public function result(SerializerInterface $serializer, int $gotenmarks, int $incorrectans, int $correctans): response
     {
         $data = [
             'correctans' => $correctans,

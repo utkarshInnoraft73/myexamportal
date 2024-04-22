@@ -12,6 +12,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ProfileType extends AbstractType
 {
+    /**
+     * Public function buildForm()
+     *  To build the exam form.
+     *
+     * @param FormBuilderInterface $builder.
+     *  To build the form.
+     *
+     * @param array $options.
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -20,11 +29,6 @@ class ProfileType extends AbstractType
             ->add('graduation_percent')
             ->add('resume_link')
 
-            // ->add('exams', EntityType::class, [
-            //     'class' => Exam::class,
-            //     'choice_label' => 'id',
-            //     'multiple' => true,
-            // ])
         ;
     }
 

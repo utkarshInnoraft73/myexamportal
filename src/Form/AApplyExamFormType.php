@@ -10,8 +10,22 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * Class AApplyExamFormType.
+ *  To Apply examFromType.
+ */
+
 class AApplyExamFormType extends AbstractType
 {
+    /**
+     * Public Function builForm().
+     *  To build the form for apply the exam by the user.
+     *
+     * @param FormBuilderInterface $builder
+     *  To build the form. the is predifined form from symfony.
+     *
+     * @param array $options.
+     */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder

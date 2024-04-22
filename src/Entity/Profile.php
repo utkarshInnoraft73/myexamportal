@@ -72,20 +72,9 @@ class Profile
     #[ORM\OneToMany(targetEntity: ProfileExamRelated::class, mappedBy: 'profile')]
     private Collection $profileExamRelateds;
 
-    // #[ORM\Column(length: 255)]
-    // private ?string $marks_of_10th = null;
-
-    // #[ORM\Column(length: 255)]
-    // private ?string $marks_of_12th = null;
-
-    // #[ORM\Column(type: Types::DATE_MUTABLE)]
-    // private ?\DateTimeInterface $dob = null;
-
-
     public function __construct()
     {
         $this->exams = new ArrayCollection();
-        // $this->profileExamId = new ArrayCollection();
         $this->profileExamRelateds = new ArrayCollection();
     }
 
@@ -204,44 +193,6 @@ class Profile
                 $profileExamRelated->setProfile(null);
             }
         }
-
         return $this;
     }
-
-    // public function getMarksOf10th(): ?string
-    // {
-    //     return $this->marks_of_10th;
-    // }
-
-    // public function setMarksOf10th(string $marks_of_10th): static
-    // {
-    //     $this->marks_of_10th = $marks_of_10th;
-
-    //     return $this;
-    // }
-
-    // public function getMarksOf12th(): ?string
-    // {
-    //     return $this->marks_of_12th;
-    // }
-
-    // public function setMarksOf12th(string $marks_of_12th): static
-    // {
-    //     $this->marks_of_12th = $marks_of_12th;
-
-    //     return $this;
-    // }
-
-    // public function getDob(): ?\DateTimeInterface
-    // {
-    //     return $this->dob;
-    // }
-
-    // public function setDob(\DateTimeInterface $dob): static
-    // {
-    //     $this->dob = $dob;
-
-    //     return $this;
-    // }
-
 }
